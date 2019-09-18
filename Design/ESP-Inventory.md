@@ -9,6 +9,8 @@
 
 ### 0NF
 
+**Inventory** <span class="md"><b class='pk'>ItemNumber</b>, ItemDescription, CurrentSalePrice, <b class='rg'>Date, SupplierNumber, PONumber, Quantity, Cost</b>, InStockCount, ReorderValue</span>
+
 ### 1NF
 
 ### 2NF
