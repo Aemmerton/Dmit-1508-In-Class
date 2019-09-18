@@ -25,11 +25,37 @@
 
 ### 3NF
 
+>No Changes
+
 ### Final Tables
 
 ### ERD
 
 ![VIEW_NAME ERD](./Logical-ERD.png)
+
+----
+
+## Purchase Order Form
+
+> *About*
+
+### 0NF
+
+**PurchaseOrder** <span class="md"><b class='pk'>PurchaseOrderNumber</b>, SupplierName, SupplierNumber, Adress, City, PostalCode, Phone, Date, <b class='rg'> ItemNumber, SupplierDescription, Quantity, Cost, Amount</b> Subtotal, GST, Total</span>
+
+### 1NF
+
+**PurchaseOrder** <span class="md"><b class='pk'>PurchaseOrderNumber</b>, SupplierName, SupplierNumber, Address, City, Province, PostalCode, Phone, Date, SubTotal, GST, Total</span>
+
+**PurchaseOrderItem** <span class='md'><b class='pk'><i class='fk'>PurchaseOrderNumber</i>, ItemNumber</b>, SupplierItemNumber, SupplierDescription, Quantity, Cost, Amount</span>
+
+### 2NF
+
+>No Changes
+
+### 3NF
+
+**PurchaseOrder** <span class='md'><b class='pk'>PurchaseOrderNumber</b><i class='fk'>ItemNumber</i>, <i class='fk'>PONumber</i></b>, Quantity, Cost</span>
 
 ----
 
