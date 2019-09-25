@@ -18,11 +18,13 @@
 
 **Paper** <span class='md'><b class='pk'><i class='fk'>CustomerID</i>, <i class='fk'>PaperID</i></b>, PaperDescription</span>
 
-**DeliveryType** <span class='md'><b class='pk'><i class='fk'>PaperID</i>DeliveryTypeID</b>, DeliveryTypeDescription, DeliveryTypeCharge</span>
+**DeliveryType** <span class='md'><b class='pk'><i class='fk'>PaperID</i>, DeliveryTypeID</b>, DeliveryTypeDescription, DeliveryTypeCharge</span>
 
 ### 3NF
+**Customer** <span class="md"><b class='pk'>CustomerId</b>, FirstName, LastName, Address, City, Province, PostalCode, PrePaidTip</span>
 
->No Changes
+**Route** <span class='md'><b class='pk'><i class='fk'>CustomerID</i>, RouteID</b>, RouteName</span>
+
 
 ### Final Tables
 
@@ -250,3 +252,4 @@ Most of the styling is done by the default conversion from Markdown (.md) to Mar
     font-size: 1.1em;
 }
 </style>
+
