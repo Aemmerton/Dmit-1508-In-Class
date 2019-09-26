@@ -10,43 +10,70 @@
 
 ### 1NF
 
-**CustomerProfile** <span class="md"><b class='pk'>CustomerId</b>, FirstName, LastName, Address, City, Province, PostalCode, PrePaidTip, RouteID, RouteName</span>
+**Customer** <span class="md"><b class='pk'>CustomerId</b>, FirstName, LastName, Address, City, Province, PostalCode, PrePaidTip, RouteID, RouteName</span>
 
-**Paper** <span class='md'><b class='pk'><i class='fk'>CustomerID</i>, PaperID</b>, PaperDescription, DeliveryTpeID, DeliveryTpeDescription, DeliveryTypeCharge</span>
+**PaperOrder** <span class='md'><b class='pk'><i class='fk'>CustomerID</i>, PaperID</b>, PaperDescription, DeliveryTpeID, DeliveryTpeDescription, DeliveryTypeCharge</span>
 
 ### 2NF
 
-**Paper** <span class='md'><b class='pk'><i class='fk'>CustomerID</i>, <i class='fk'>PaperID</i></b>, PaperDescription</span>
+**PaperOrder** <span class='md'><b class='pk'><i class='fk'>CustomerID</i>, <i class='fk'>PaperID</i></b>, PaperDescription</span>
 
-**DeliveryType** <span class='md'><b class='pk'><i class='fk'>PaperID</i>, DeliveryTypeID</b>, DeliveryTypeDescription, DeliveryTypeCharge</span>
+**DeliveryDetails** <span class='md'><b class='pk'><i class='fk'>CustomerID</i>, DeliveryTypeID</b>, DeliveryTypeDescription, DeliveryTypeCharge</span>
 
 ### 3NF
-**Customer** <span class="md"><b class='pk'>CustomerId</b>, FirstName, LastName, Address, City, Province, PostalCode, PrePaidTip</span>
+>No Changes
 
-**Route** <span class='md'><b class='pk'><i class='fk'>CustomerID</i>, RouteID</b>, RouteName</span>
+### Paper Distribution ERD
 
-
-### Final Tables
-
-### ERD
-
-![VIEW_NAME ERD](./Logical-ERD.png)
+![VIEW_NAME ERD](./ERD1.png)
 
 ----
 
-## Purchase Order Form
+## Distributor Routes Summary
 
-> *About*
+![VIEW_NAME ERD](./Profile2.png)
 
 ### 0NF
 
-**PurchaseOrder** <span class="md"><b class='pk'>PurchaseOrderNumber</b>, SupplierName, SupplierNumber, Adress, City, PostalCode, Phone, Date, <b class='rg'> ItemNumber, SupplierDescription, Quantity, Cost, Amount</b> Subtotal, GST, Total</span>
+**PurchaseOrder** <span class="md"><b class='pk'>ZoneID</b>, ZoneName, ZoneManagerName, CellNumber, <b class='rg'> RegionID, RegionName, RegionSupervisorName, RouteID, RouteName, CarrierID, DropSiteID</b> </span>
 
 ### 1NF
 
-**PurchaseOrder** <span class="md"><b class='pk'>PurchaseOrderNumber</b>, SupplierName, SupplierNumber, Address, City, Province, PostalCode, Phone, Date, SubTotal, GST, Total</span>
+**Zone** <span class="md"><b class='pk'>ZoneID</b>, ZoneNAme, ZoneManagerName, CellNumber</span>
 
-**PurchaseOrderItem** <span class='md'><b class='pk'><i class='fk'>PurchaseOrderNumber</i>, ItemNumber</b>, SupplierItemNumber, SupplierDescription, Quantity, Cost, Amount</span>
+**Region** <span class='md'><b class='pk'><i class='fk'>ZoneID</i>, RegionID</b>, RegionName, RegionSupervisorName, RouteID, RouteName, CarrierID, DropSiteID</span>
+
+### 2NF
+
+**Region** <span class='md'><b class='pk'><i class='fk'>ZoneID, RegionID</i></b>, RegionName, RegionSupervisorName,  CarrierID, DropSiteID</span>
+
+**Region** <span class='md'><b class='pk'><i class='fk'>ZoneID</i>, RouteID</b>, RouteName</span>
+
+
+### 3NF
+
+>No Changes
+
+
+### Distributor Routes ERD
+
+![VIEW_NAME ERD](./ERD2.png)
+
+----
+
+## Drop Site Delivery Orders
+
+![VIEW_NAME ERD](./Profile3.png)
+
+### 0NF
+
+**DropSiteDeliveryOrders** <span class="md"><b class='pk'>DropSiteID</b>, DropSiteName, DropSiteAddress, <b class='rg'> RouteID, RouteName, CarrierID, CarrierName, CarrierPhone</b> </span>
+
+### 1NF
+
+**DropSite** <span class="md"><b class='pk'>DropSiteID</b>, DropSiteName, DropSiteAddress</span>
+
+**Route** <span class='md'><b class='pk'><i class='fk'>DropSiteID</i>, RouteID</b>, RouteName, CarrierID, CarrierName, CarrierPhone</span>
 
 ### 2NF
 
@@ -54,11 +81,19 @@
 
 ### 3NF
 
-**PurchaseOrder** <span class='md'><b class='pk'>PurchaseOrderNumber</b><i class='fk'>ItemNumber</i>, <i class='fk'>PONumber</i></b>, Quantity, Cost</span>
+>No Changes
+
+### Drop Site Delivery Orders ERD
+
+![VIEW_NAME ERD](./ERD3.png)
 
 ----
 
-## Legend
+### Combined Paper Delivery ERD
+
+![VIEW_NAME ERD](./CombinedERD.png)
+
+----
 
 This legend is a guide to reading and interpreting the table listings under 0NF through 3NF.
 
