@@ -59,9 +59,36 @@ CREATE TABLE Customers
     LastName        varchar(60)         NOT NULL,
     [Address]       varchar(40)         NOT NULL,
     City            varchar(35)         NOT NULL,
-    Province        char(2)             NOT NULL,
-    PostalCode      char(6)             NOT NULL,
-    PhoneNumber     char(13)                NULL  -- NULL means the data is optional
+    Province        char(2)             
+		CONSTRAINT DF_Customers_Province
+			DEFAULT ('AB')
+		-- A Check constraint ensures that only the specified value(s)
+		-- will be accepted when adding a row of data
+		CONSTRAINT CK_Customers_Province
+			Check (Province = 'AB' OR
+				   Province = 'BC' OR
+				   Province = 'SK' OR
+				   Province = 'MB' OR
+				   Province = 'QC' OR
+				   Province = 'ON' OR
+				   Province = 'NT' OR
+				   Province = 'NS' OR
+				   Province = 'NB' OR
+				   Province = 'NL' OR
+				   Province = 'YK' OR
+				   Province = 'NU' OR
+				   Province = 'PE')
+
+										NOT NULL,
+    PostalCode      char(6)             
+		CONSTRAINT CK_Customers_PostalCode
+			CHECK (PostalCode Like '[A-Z][0-9][A-Z][0-9[A-Z][0-9]')
+										NOT NULL,
+    PhoneNumber     char(13)                
+		CONSTRAINT CK_Customers_PhoneNumber
+			CHECK (PhoneNumber like
+					'([0-9][0-9][0-9])[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]')
+										NULL  -- NULL means the data is optional
 )
 
 CREATE TABLE Orders
@@ -79,8 +106,12 @@ CREATE TABLE Orders
             Customers(CustomerNumber)   NOT NULL,
     [Date]          datetime            NOT NULL,
     Subtotal        money               NOT NULL,
+        CONSTRAINT CK_Orders_Subtotal
+            CHECK (Subtotal > 0)
     GST             money               NOT NULL,
-    Total           money               NOT NULL
+        CONSTRAINT CK_Orders_GST
+            CHECK (GST >= 0)
+    Total           AS Subtotal + GST   -- This is now a Computed Column
 )
 
 CREATE TABLE InventoryItems
@@ -106,8 +137,15 @@ CREATE TABLE OrderDetails
         CONSTRAINT FK_OrderDetails_ItemNumber_InventoryItems_ItemNumber
             FOREIGN KEY REFERENCES
             InventoryItems(ItemNumber)  NOT NULL,
-    Quantity        int                 NOT NULL,
-    SellingPrice    money               NOT NULL,
+    Quantity        int                 
+		CONSTRAINT DF_OrderDetails_Quantity
+			DEFAULT (1)
+		CONSTRAINT CK_OrderDetails_Quantity
+			CHECK	(Quantity > 0)
+										NOT NULL,
+    SellingPrice    money
+		CONSTRAINT CK_OrderDetails_SellingPrice
+			CHECK (SellingPrice >= 0)   NOT NULL,
     Amount          AS Quantity * SellingPrice  ,
     -- The following is a Table Constraint
     -- A composite primary key MUST be done as a Table Constraint
