@@ -176,4 +176,20 @@ CREATE TABLE Payments
     SellingPrice    money               NOT NULL,
     Amount          money               NOT NULL
 )
+-- Let's insert a few rows of data for the tables (DML Statements)
+PRINT 'Inserting customer data'
+INSERT INTO Customers(FirstName, LastName, [Address], City, PostalCode)
+    VALUES ('Clark','Kent', '344 Clinton Street', 'Metropolis', 'S0S0N0')
+INSERT INTO Customers(FirstName, LastName, [Address], City, PostalCode)
+    VALUES ('Jimmy', 'Olsen', '242 River Close', 'Bakerline', 'B4K3R1')
+PRINT '-- end of customer data --'
+Print ''
+
+--Leet's write an SQL Query statement to view the data in the database
+-- Select the customer information
+SELECT CustomerNumber, FirstName,LastName,
+       [Address] + '' + City + ',' + Province AS 'Customer Address',
+       PhoneNumber
+FROM Customers
+
 /*==========================================================*/
