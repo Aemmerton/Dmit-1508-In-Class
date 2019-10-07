@@ -239,7 +239,33 @@ ALTER TABLE Customers
 	ALTER COLUMN PostalCode char(6) NULL
 GO
 
- -- B) Add a check constraint on the First and Last name to require at least two letters/
+ -- B) Add a check constraint on the First and Last name to require at least two letters.
+--	% is a wildcard for zero or more characters (letter, digit, or other character)
+--	_ is a wildcard for a single character (letter, digit, or other character)
+--	[] are used to represent a range or set of characters that are allowed
+ALTER TABLE Customers
+	ADD CONSTRAINT CK_Customers_FirstName
+		CHECK (FirstName LIKE '[A-Z][A-Z]%') -- two letters plus any other chars
+--							   \ 1 /\ 1 /
+ALTER TABLE Customers
+	ADD CONSTRAINT CK_Customers_LastName
+		CHECK (LastName LIKE '[A-Z][A-Z]%')
+
+-- Once the ALTER TABLE changes are made for A) and B),
+-- we can insert customer information allowing certain columns to be NULL.
+INSERT INTO Customers(FirstName, LastName)
+	VALUES ('Fred', 'Flintstone')
+INSERT INTO Customers(FirstName, LastName)
+	VALUES ('Barney', 'Rubble')
+INSERT INTO Customers(FirstName, LastName, PhoneNumber)
+	VALUES ('Wilma', 'Slaghoople', '(403)555-1212')
+INSERT INTO Customers(FirstName, LastName, [Address], City)
+	VALUES ('Betty', 'Mcbricker', '103 Granit Road', 'Bedrock')
+GO
+	-- Select the customer information
+SELECT	CustomerNumber, FirstName, LastName, [Address] + '' + City + ',' + Province AS 'Customer Address', PhoneNumber
+From	Customers
+GO
 
  -- C) add an extra bit of information on the Customer table. The client wants to start tracking customer emails,
  --    so they can send out statements for outstanding payments that are due at the end of the month.
