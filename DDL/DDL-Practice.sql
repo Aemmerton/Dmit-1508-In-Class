@@ -223,6 +223,21 @@ GO
  * having to drop it or lose information in the table
  ************************/
  -- A) Allow address, City, Province, and Postal Code to be NULL
+ALTER TABLE Customers
+	ALTER COLUMN [Address] varchar(40) NULL
+GO -- this staements helps to "separate" various DDL statements in our script. It's optional.
+
+ALTER TABLE Customers 
+	ALTER COLUMN City varchar(35) NULL
+GO
+
+ALTER TABLE Customers
+	ALTER COLUMN Province char(2) NULL
+GO
+
+ALTER TABLE Customers
+	ALTER COLUMN PostalCode char(6) NULL
+GO
 
  -- B) Add a check constraint on the First and Last name to require at least two letters/
 
