@@ -78,6 +78,13 @@ WHERE  PositionID = 3
 SELECT  PositionID, PositionDescription
 FROM    Position
 
+-- Interlude...
+SELECT	S.FirstName, S.LastName
+FROM	Student AS S
+WHERE	S.BalanceOwing = 0
+
+-- sp_help Student
+
 --6.    Select the Course Names whose course hours are less than 96
 SELECT  C.CourseName
 FROM    Course C -- I can have an alias to the table name
