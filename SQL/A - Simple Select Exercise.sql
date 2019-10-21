@@ -164,9 +164,9 @@ FROM    Club
 WHERE   Club like ('N%', 'C%')
 
 --13. Select Student Names, Street Address and City where the lastName is only 3 letters long.
-SELECT  FirstName, LastName, StreetAddress, City
-FROM    Student
-WHERE   lastName LIKE '___'
+SELECT  S.FirstName + ' ' + S.LastName AS 'StudentName', S.StreetAddress, S.City
+FROM    Student AS S
+WHERE   S.LastName LIKE '___'
 
 --14. Select all the StudentID's where the PaymentAmount < 500 OR the PaymentTypeID is 5
 SELECT  StudentID
