@@ -78,6 +78,13 @@ WHERE  PositionID = 3
 SELECT  PositionID, PositionDescription
 FROM    Position
 
+-- Interlude...
+SELECT	S.FirstName, S.LastName
+FROM	Student AS S
+WHERE	S.BalanceOwing = 0
+
+-- sp_help Student
+
 --6.    Select the Course Names whose course hours are less than 96
 SELECT  C.CourseName
 FROM    Course C -- I can have an alias to the table name
@@ -131,6 +138,10 @@ WHERE   R.Mark = 80 OR R.Mark = 85
 -- _ is a wildcard for a single character
 -- % is a wildcard for zero or more characters
 -- [] is a pattern for a single character matching the pattern in the square brackets
+
+
+--***** HAVE THESE QUESTIONS DONE FOR MONDAY********************
+
 --9. Select the students first and last names who have last names starting with S
 SELECT  FirstName, LastName
 FROM    Student
