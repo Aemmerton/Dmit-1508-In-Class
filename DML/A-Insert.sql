@@ -42,6 +42,16 @@ VALUES ('Shane', 'Bell', GETDATE(),
         (SELECT PositionID
         FROM   Position
         WHERE  PositionDescription = 'Instructor'))
+		-- 2.c. We have an open position in the staff.
+SELECT	PositionDescription
+FROM	Position
+WHERE	PositionID NOT IN (SELECT PositionID FROM Staff)
+--		Add Sheldon Murray as the new Assistant Dean. (He has friends at NAIT)
+INSERT INTO Staff(FirstName, LastName, DateHired, PositionID)
+VALUES		('Sheldon','Murray',GETDATE(),
+			(SELECT PositionID
+			FROM	Position
+			WHERE	PositionDescription = 'Assistant Dean'))
 
 -- 3. There are three additional clubs being started at the school:
 --      - START - Small Tech And Research Teams
@@ -57,6 +67,11 @@ VALUES ('START', 'Small Tech And Research Teams'),
 -- 4. In your web browser, use https://randomuser.me/ to get information on three
 --    people to add as new students. Write separate insert statement for each new student.
 -- TODO: Student Answer Here....
+-- Select * FROM Student
+INSERT INTO Student(FirstName, LastName, Gender, StreetAddress, Birthdate)
+VALUES	('Lois', 'Palmer', 'F', '8677 Ash Dr', '1949-02-03 00:00:00'),
+		('Cory', 'Allen', 'M', '2551 Rolling Green Rd', '1981-06-11 00:00:00'),
+		('Gloria', 'Black', 'F', '480 Bruce St', '1970-02-10 00:00:00')
 
 
 -- 5. Enroll each of the students you've added into the DMIT104 course.
