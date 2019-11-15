@@ -47,26 +47,26 @@ AS
     -- 1) Remove members of the club (from Activity)
 		DELETE FROM Activity WHERE ClubId = @ClubId
 		IF @@ERROR <> 0 -- then there's a problem with the delete
-    BEGIN
-        ROLLBACK TRANSACTION -- Ending/undoing any temporary DML statements
-        RAISERROR('Unable to remove members from the club', 16, 1)
-    END
-    ELSE
-    BEGIN
+		BEGIN
+			ROLLBACK TRANSACTION -- Ending/undoing any temporary DML statements
+			RAISERROR('Unable to remove members from the club', 16, 1)
+		END
+		ELSE
+		BEGIN
     -- 2) Remove the club
-        DELETE FROM Club WHERE ClubId = @ClubId
-        IF @@ERROR <> 0 OR @@ROWCOUNT = 0 -- there's a problem
-        BEGIN
-            ROLLBACK TRANSACTION
-            RAISERROR('Unable to delete the club', 16, 1)
-        END
-        ELSE
-        BEGIN
-            COMMIT TRANSACTION -- Finalize all the temporary DML statements
-        END
-    END
+			DELETE FROM Club WHERE ClubId = @ClubId
+			IF @@ERROR <> 0 OR @@ROWCOUNT = 0 -- there's a problem
+			BEGIN
+				ROLLBACK TRANSACTION
+				RAISERROR('Unable to delete the club', 16, 1)
+			END
+			ELSE
+			BEGIN
+				COMMIT TRANSACTION -- Finalize all the temporary DML statements
+			END
+		END
 	END
-	END
+END
 RETURN
 GO
 -- To test the stored procedure, look for clubs and members
