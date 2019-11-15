@@ -16,9 +16,70 @@ RETURN
 GO
 */
 
+-- Start with comments as done below in question 1, Set if else to prompt potential errors
+
 -- 1. Create a stored procedure called DissolveClub that will accept a club id as its parameter. Ensure that the club exists before attempting to dissolve the club. You are to dissolve the club by first removing all the members of the club and then removing the club itself.
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'Procedure' AND ROUTINE_NAME = 'DissolveClub')
+    DROP PROCEDURE DissolveClub
+GO
+CREATE PROCEDURE DissolveClub
+    -- Parameters here
+    @ClubId     varchar(10)
+AS
+    -- Body of procedure here
+    -- Validation:
+    -- A) Make sure the ClubId is not null
+    IF @ClubId IS NULL
+    BEGIN
+        RAISERROR('ClubId is required', 16, 1)
+    END
+    ELSE
+    BEGIN
+    -- B) Make sure the club exists
+    IF NOT EXISTS(SELECT ClubId FROM Club WHERE ClubId = @ClubId)
+    BEGIN
+        RAISERROR('That club does not exist', 16,1)
+    END
+    ELSE
+	BEGIN
+    -- Transaction:
+		BEGIN TRANSACTION -- Starts the transaction - everything is temporary
+    -- 1) Remove members of the club (from Activity)
+		DELETE FROM Activity WHERE ClubId = @ClubId
+		IF @@ERROR <> 0 -- then there's a problem with the delete
+    BEGIN
+        ROLLBACK TRANSACTION -- Ending/undoing any temporary DML statements
+        RAISERROR('Unable to remove members from the club', 16, 1)
+    END
+    ELSE
+    BEGIN
+    -- 2) Remove the club
+        DELETE FROM Club WHERE ClubId = @ClubId
+        IF @@ERROR <> 0 OR @@ROWCOUNT = 0 -- there's a problem
+        BEGIN
+            ROLLBACK TRANSACTION
+            RAISERROR('Unable to delete the club', 16, 1)
+        END
+        ELSE
+        BEGIN
+            COMMIT TRANSACTION -- Finalize all the temporary DML statements
+        END
+    END
+	END
+	END
+RETURN
+GO
+-- To test the stored procedure, look for clubs and members
+SELECT * FROM Club AS C LEFT OUTER JOIN Activity AS A on C.ClubID = A.ClubID
+-- I found the CIPS club with no members and the ACM club with lots of members
+EXEC DissolveClub 'CIPS' -- Should succeed
+EXEC DissolveClub 'ACM' -- Should succeed
+EXEC DissolveClub 'CIPS' -- Should now fail because the club doesn't exist anymore
+EXEC DissolveClub NULL -- Should fail, because a club id is required
+
 
 GO
+
 -- 2. Create a stored procedure called ArchivePayments. This stored procedure must transfer all payment records to the StudentPaymentArchive table. After archiving, delete the payment records.
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StudentPaymentArchive')
     DROP TABLE StudentPaymentArchive
