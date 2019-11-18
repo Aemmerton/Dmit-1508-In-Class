@@ -98,3 +98,42 @@ CREATE TABLE StudentPaymentArchive
     Amount          money       NOT NULL,
     PaymentDate     datetime    NOT NULL
 )
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = N'PROCEDURE' AND ROUTINE_NAME = 'ArchivePayments')
+DROP PROCEDURE ArchivePayments
+GO
+CREATE PROCEDURE ArchivePayments
+	-- Parameters here
+AS
+	-- Body of proceudre here
+	BEGIN TRANSACTION
+	--Inster into StudentPaymentArchive()
+	INSERT INTO StudentPaymentArchive(StudentID, FirstName, LastName, PaymentDate, PaymentMethod, Amount)
+	SELECT S.StudentID, FirstName, LastName, PaymentDate, PaymentTypeDescription, Amount
+	FROM	Student AS S
+		INNER JOIN Payment AS P
+			ON S.StudentID = P.StudentID
+		INNER JOIN PaymentType AS PT
+			ON P.PaymentTypeID = PT.PaymentTypeID
+	IF @@ERROR > 0
+	BEGIN
+		ROLLBACK TRANSACTION
+		RAISERROR('Unable to archive student payments', 16, 1)
+	END
+	ELSE
+	BEGIN
+		-- Delete from Payment
+		DELETE FROM Payment
+		IF @@ERROR > 0 
+		BEGIN
+			ROLLBACK TRANSACTION -- back out and undo any changes since beginning
+			RAISERROR('Unable to delete payments after archiving', 16, 1)
+		END
+		ELSE
+		BEGIN
+			COMMIT TRANSACTION -- accept and finalize all changes to the database
+		END
+	END
+RETURN
+GO
