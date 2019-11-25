@@ -177,8 +177,14 @@ AS
 	END
 RETURN
 GO
+-- Testing the trigger via the stored procedure RegisterStudent
+SELECT TOP(4) StudentID, BalanceOwing, CourseID FROM Student, Course -- Don't ever write a query like this unless you really know what you're doing
+EXEC RegisterStudent 198933540, 'DMIT108', '2008J' -- This should Succeed
+EXEC RegisterStudent 198933540, 'DMIT104', '2008J' -- This should Succeed
 
+EXEC RegisterStudent 198933540, 'DMIT101', '2008J' -- This Should Fail
 
+SELECT StudentID, BalanceOwing FROM Student WHERE StudentID=198933540
 --4. Our school DBA has suddenly disabled some Foreign Key constraints to deal with performance issues! Create a trigger on the Registration table to ensure that only valid CourseIDs, StudentIDs and StaffIDs are used for grade records. (You can use sp_help tablename to find the name of the foreign key constraints you need to disable to test your trigger.) Have the trigger raise an error for each foreign key that is not valid. If you have trouble with this question create the trigger so it just checks for a valid student ID.
 -- sp_help Registration -- then disable the foreign key constraints....
 ALTER TABLE Registration NOCHECK CONSTRAINT FK_GRD_CRS_CseID
